@@ -74,3 +74,32 @@
  background:rgb(0, 255, 200)
 }
 </style>
+
+<script>
+import * as XLSX from "sheetjs";
+
+export default {
+    methods: {
+  async handleFileUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const arrayBuffer = e.target.result;
+      const data = this.parseExcelData(arrayBuffer);
+      // Do something with the parsed data (e.g., assign it to a variable)
+    };
+    reader.readAsArrayBuffer(file);
+  },
+  parseExcelData(arrayBuffer) {
+    const wb = XLSX.read(arrayBuffer);
+    const sheetName = wb.SheetNames[0];
+    const sheetData = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
+    return sheetData;
+  },
+},
+
+}
+</script>
